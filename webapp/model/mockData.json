@@ -1,166 +1,190 @@
 {
-  "features": [
+  "featureGroups": [
     {
       "id": "labels",
-      "route": "labels",
-      "businessObject": "Labels",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": true,
-        "verify": false,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Etiquetas hospitalarias / COMEX",
-      "description": "Gestión de etiquetas",
-      "icon": "sap-icon://bar-code",
-      "statusText": "Próximamente",
-      "order": 10
-    },
-    {
-      "id": "packages",
-      "route": "packages",
-      "businessObject": "QuarantinePackages",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": false,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Bultos cuarentena",
-      "description": "Consulta de bultos en cuarentena",
-      "icon": "sap-icon://lateness",
-      "statusText": "Próximamente",
-      "order": 20
-    },
-    {
-      "id": "packageApproval",
-      "route": "packageApproval",
-      "businessObject": "PackageApproval",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": false,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Bultos aprobados / rechazados",
-      "description": "Consulta de resultados de aprobación",
-      "icon": "sap-icon://complete",
-      "statusText": "Próximamente",
-      "order": 30
+      "title": "Etiquetas",
+      "description": "Gestión de impresión y bultos",
+      "order": 10,
+      "features": [
+        {
+          "id": "labels",
+          "route": "labels",
+          "businessObject": "Labels",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": true,
+            "verify": false,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Etiquetas hospitalarias / COMEX",
+          "description": "Gestión de etiquetas",
+          "icon": "sap-icon://bar-code",
+          "statusText": "No implementado",
+          "order": 10
+        },
+        {
+          "id": "packages",
+          "route": "packages",
+          "businessObject": "QuarantinePackages",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": false,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Bultos cuarentena",
+          "description": "Consulta de bultos en cuarentena",
+          "icon": "sap-icon://lateness",
+          "statusText": "No implementado",
+          "order": 20
+        },
+        {
+          "id": "packageApproval",
+          "route": "packageApproval",
+          "businessObject": "PackageApproval",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": false,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Bultos aprobados / rechazados",
+          "description": "Consulta de resultados de aprobación",
+          "icon": "sap-icon://complete",
+          "statusText": "No implementado",
+          "order": 30
+        }
+      ]
     },
     {
       "id": "traceability",
-      "route": "traceability",
-      "businessObject": "Traceability",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": true,
-        "verify": true,
-        "reprint": false,
-        "report": true
-      },
       "title": "Trazabilidad",
-      "description": "Seguimiento de series y verificación",
-      "icon": "sap-icon://process",
-      "statusText": "Próximamente",
-      "order": 40
+      "description": "Seguimiento de series",
+      "order": 20,
+      "features": [
+        {
+          "id": "traceability",
+          "route": "traceability",
+          "businessObject": "Traceability",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": true,
+            "verify": true,
+            "reprint": false,
+            "report": true
+          },
+          "title": "Trazabilidad",
+          "description": "Seguimiento de series y verificación",
+          "icon": "sap-icon://process",
+          "statusText": "No implementado",
+          "order": 40
+        },
+        {
+          "id": "reprint",
+          "route": "reprint",
+          "businessObject": "LabelReprint",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": true,
+            "verify": false,
+            "reprint": true,
+            "report": false
+          },
+          "title": "Reimpresión",
+          "description": "Acceso a reimpresión de etiquetas",
+          "icon": "sap-icon://print",
+          "statusText": "No implementado",
+          "order": 50
+        },
+        {
+          "id": "scanner",
+          "route": "scanner",
+          "businessObject": "ScannerVerification",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": true,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Verificación scanner",
+          "description": "Verificación mediante lectura",
+          "icon": "sap-icon://inspection",
+          "statusText": "No implementado",
+          "order": 60
+        }
+      ]
     },
     {
-      "id": "reprint",
-      "route": "reprint",
-      "businessObject": "LabelReprint",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": true,
-        "verify": false,
-        "reprint": true,
-        "report": false
-      },
-      "title": "Reimpresión",
-      "description": "Acceso a reimpresión de etiquetas",
-      "icon": "sap-icon://print",
-      "statusText": "Próximamente",
-      "order": 50
-    },
-    {
-      "id": "scanner",
-      "route": "scanner",
-      "businessObject": "ScannerVerification",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": true,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Verificación scanner",
-      "description": "Verificación mediante lectura",
-      "icon": "sap-icon://inspection",
-      "statusText": "Próximamente",
-      "order": 60
-    },
-    {
-      "id": "reports",
-      "route": "reports",
-      "businessObject": "Reports",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": false,
-        "reprint": false,
-        "report": true
-      },
-      "title": "Reportes",
-      "description": "Consultas e informes",
-      "icon": "sap-icon://business-objects-experience",
-      "statusText": "Próximamente",
-      "order": 70
-    },
-    {
-      "id": "settings",
-      "route": "settings",
-      "businessObject": "Settings",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": false,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Configuración",
-      "description": "Parámetros de la aplicación",
-      "icon": "sap-icon://action-settings",
-      "statusText": "Próximamente",
-      "order": 80
-    },
-    {
-      "id": "logs",
-      "route": "logs",
-      "businessObject": "ApplicationLogs",
-      "businessObjectVersion": 1,
-      "capabilities": {
-        "display": true,
-        "print": false,
-        "verify": false,
-        "reprint": false,
-        "report": false
-      },
-      "title": "Logs",
-      "description": "Consulta de eventos de la aplicación",
-      "icon": "sap-icon://activity-items",
-      "statusText": "Próximamente",
-      "order": 90
+      "id": "administration",
+      "title": "Administración",
+      "description": "Configuración y consultas",
+      "order": 30,
+      "features": [
+        {
+          "id": "reports",
+          "route": "reports",
+          "businessObject": "Reports",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": false,
+            "reprint": false,
+            "report": true
+          },
+          "title": "Reportes",
+          "description": "Consultas e informes",
+          "icon": "sap-icon://business-objects-experience",
+          "statusText": "No implementado",
+          "order": 70
+        },
+        {
+          "id": "settings",
+          "route": "settings",
+          "businessObject": "Settings",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": false,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Configuración",
+          "description": "Parámetros de la aplicación",
+          "icon": "sap-icon://action-settings",
+          "statusText": "No implementado",
+          "order": 80
+        },
+        {
+          "id": "logs",
+          "route": "logs",
+          "businessObject": "ApplicationLogs",
+          "businessObjectVersion": 1,
+          "capabilities": {
+            "display": true,
+            "print": false,
+            "verify": false,
+            "reprint": false,
+            "report": false
+          },
+          "title": "Logs",
+          "description": "Consulta de eventos de la aplicación",
+          "icon": "sap-icon://activity-items",
+          "statusText": "No implementado",
+          "order": 90
+        }
+      ]
     }
   ]
 }

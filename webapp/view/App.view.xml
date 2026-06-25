@@ -1,7 +1,24 @@
-<mvc:View controllerName="etiquetas.controller.App"
+<mvc:View
+    controllerName="etiquetas.controller.App"
     displayBlock="true"
     xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.f"
     xmlns="sap.m">
-    <App id="app">
-    </App>
+
+    <VBox fitContainer="true">
+        <f:ShellBar title="{i18n>appTitle}">
+            <f:profile>
+                <Avatar
+                    src="sap-icon://person-placeholder"
+                    displayShape="Circle"
+                    tooltip="{i18n>shellProfileTooltip}" />
+            </f:profile>
+        </f:ShellBar>
+
+        <App id="app">
+            <layoutData>
+                <FlexItemData growFactor="1" />
+            </layoutData>
+        </App>
+    </VBox>
 </mvc:View>

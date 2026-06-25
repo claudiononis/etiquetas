@@ -9,7 +9,7 @@ sap.ui.define([
             super();
 
             this._oModel = new JSONModel({
-                features: []
+                featureGroups: []
             });
 
             this._pLoadPromise = null;
@@ -44,21 +44,31 @@ sap.ui.define([
 
         getFeatureByRoute(sRouteName) {
             return this.load().then(() => {
-                const aFeatures =
-                    this._oModel.getProperty("/features") || [];
+                const aFeatureGroups =
+                    this._oModel.getProperty("/featureGroups") || [];
 
-                const iFeatureIndex = aFeatures.findIndex(
-                    (oFeature) => oFeature.route === sRouteName
-                );
+                for (
+                    let iGroupIndex = 0;
+                    iGroupIndex < aFeatureGroups.length;
+                    iGroupIndex += 1
+                ) {
+                    const aFeatures =
+                        aFeatureGroups[iGroupIndex].features || [];
+                    const iFeatureIndex = aFeatures.findIndex(
+                        (oFeature) => oFeature.route === sRouteName
+                    );
 
-                if (iFeatureIndex === -1) {
-                    return null;
+                    if (iFeatureIndex !== -1) {
+                        return {
+                            feature: aFeatures[iFeatureIndex],
+                            path:
+                                `/featureGroups/${iGroupIndex}` +
+                                `/features/${iFeatureIndex}`
+                        };
+                    }
                 }
 
-                return {
-                    feature: aFeatures[iFeatureIndex],
-                    path: `/features/${iFeatureIndex}`
-                };
+                return null;
             });
         }
     }
