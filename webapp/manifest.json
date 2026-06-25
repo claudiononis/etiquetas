@@ -1,0 +1,174 @@
+{
+  "_version": "1.65.0",
+  "sap.app": {
+    "id": "etiquetas",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.18.4",
+      "toolsId": "1f85f435-8415-4be4-a8c8-186aa607550c"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.149.0",
+      "libs": {
+        "sap.f": {},
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.ui.layout": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "etiquetas.i18n.i18n"
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "controlAggregation": "pages",
+        "controlId": "app",
+        "transition": "slide",
+        "type": "View",
+        "viewType": "XML",
+        "path": "etiquetas.view",
+        "async": true,
+        "viewPath": "etiquetas.view"
+      },
+      "routes": [
+        {
+          "name": "home",
+          "pattern": "home",
+          "target": [
+            "TargetView1"
+          ]
+        },
+        {
+          "name": "labels",
+          "pattern": "labels",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "packages",
+          "pattern": "packages",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "packageApproval",
+          "pattern": "package-approval",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "traceability",
+          "pattern": "traceability",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "reprint",
+          "pattern": "reprint",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "scanner",
+          "pattern": "scanner",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "reports",
+          "pattern": "reports",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "settings",
+          "pattern": "settings",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "logs",
+          "pattern": "logs",
+          "target": [
+            "TargetModule"
+          ]
+        },
+        {
+          "name": "RouteView1",
+          "pattern": ":?query:",
+          "target": [
+            "TargetView1"
+          ]
+        }
+      ],
+      "targets": {
+        "TargetView1": {
+          "id": "View1",
+          "name": "View1"
+        },
+        "TargetModule": {
+          "id": "Module",
+          "name": "Module"
+        }
+      }
+    },
+    "rootView": {
+      "viewName": "etiquetas.view.App",
+      "type": "XML",
+      "id": "App",
+      "async": true
+    }
+  }
+}

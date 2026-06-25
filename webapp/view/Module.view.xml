@@ -1,0 +1,50 @@
+<mvc:View
+    controllerName="etiquetas.controller.Module"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.f"
+    xmlns="sap.m">
+
+    <f:DynamicPage
+        id="modulePage"
+        headerExpanded="true"
+        toggleHeaderOnTitleClick="false">
+
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title
+                        text="{app>title}"
+                        level="H1" />
+                </f:heading>
+
+                <f:expandedContent>
+                    <Text text="{app>description}" />
+                </f:expandedContent>
+
+                <f:navigationActions>
+                    <Button
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        tooltip="{i18n>backButtonTooltip}"
+                        press=".onNavBack" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:content>
+            <VBox class="sapUiResponsiveContentPadding">
+                <ObjectStatus
+                    text="{app>statusText}"
+                    state="Information"
+                    icon="{app>icon}" />
+
+                <MessageStrip
+                    text="{i18n>modulePlaceholder}"
+                    type="Information"
+                    showIcon="true"
+                    showCloseButton="false"
+                    class="sapUiMediumMarginTop" />
+            </VBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

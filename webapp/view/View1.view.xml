@@ -1,0 +1,64 @@
+<mvc:View
+    controllerName="etiquetas.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:f="sap.f"
+    xmlns="sap.m">
+
+    <f:DynamicPage
+        id="page"
+        headerExpanded="true"
+        toggleHeaderOnTitleClick="false">
+
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title
+                        text="{i18n>cockpitTitle}"
+                        level="H1" />
+                </f:heading>
+
+                <f:expandedContent>
+                    <Text text="{i18n>cockpitDescription}" />
+                </f:expandedContent>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:content>
+            <VBox class="sapUiResponsiveContentPadding">
+                <Title
+                    text="{i18n>modulesTitle}"
+                    level="H2"
+                    class="sapUiSmallMarginBottom" />
+
+                <f:GridContainer items="{app>/features}">
+                    <f:layout>
+                        <f:GridContainerSettings
+                            rowSize="5rem"
+                            columnSize="5rem"
+                            gap="1rem" />
+                    </f:layout>
+
+                    <GenericTile
+                        header="{app>title}"
+                        subheader="{app>description}"
+                        press=".onModulePress">
+
+                        <layoutData>
+                            <f:GridContainerItemLayoutData
+                                columns="2"
+                                rows="2" />
+                        </layoutData>
+
+                        <tileContent>
+                            <TileContent footer="{app>statusText}">
+                                <content>
+                                    <ImageContent src="{app>icon}" />
+                                </content>
+                            </TileContent>
+                        </tileContent>
+                    </GenericTile>
+                </f:GridContainer>
+            </VBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
