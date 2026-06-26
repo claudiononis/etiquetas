@@ -89,11 +89,26 @@ sap.ui.define([
         }
 
         executeAction(sBusinessObject, sAction, oParameters = {}) {
-            if (sBusinessObject !== "Labels") {
-                return Promise.reject(new Error("Not implemented yet"));
-            }
-
             return this.load().then(() => {
+                if (sBusinessObject === "Labels") {
+                    return this._executeLabelAction(
+                        sAction,
+                        oParameters
+                    );
+                }
+
+                if (sBusinessObject === "QuarantinePackages") {
+                    return this._executeQuarantinePackageAction(
+                        sAction,
+                        oParameters
+                    );
+                }
+
+                throw new Error("Not implemented yet");
+            });
+        }
+
+        _executeLabelAction(sAction, oParameters = {}) {
                 switch (sAction) {
                     case "selectMaterial":
                         return this._selectLabelMaterial(
@@ -116,7 +131,6 @@ sap.ui.define([
                     default:
                         throw new Error("Not implemented yet");
                 }
-            });
         }
 
         _selectLabelMaterial(sMaterialId) {
@@ -421,6 +435,428 @@ sap.ui.define([
 
         _toGtin14(sGtin) {
             return String(sGtin || "").padStart(14, "0").slice(-14);
+        }
+
+        _executeQuarantinePackageAction(sAction, oParameters = {}) {
+            switch (sAction) {
+                case "selectMaterial":
+                    return this._selectPackageMaterial(
+                        oParameters.materialId
+                    );
+                case "selectBatch":
+                    return this._selectPackageBatch(
+                        oParameters.batchId
+                    );
+                case "generateDistribution":
+                    return this._generatePackageDistribution();
+                case "addLine":
+                    return this._addPackageLine();
+                case "removeLine":
+                    return this._removePackageLine(
+                        oParameters.path
+                    );
+                case "selectLine":
+                    return this._selectPackageLine(
+                        oParameters.path
+                    );
+                case "updateLine":
+                    return this._updatePackageLine();
+                case "generatePreview":
+                    return this._generatePackagePreview();
+                case "clear":
+                    this._clearPackageRequest();
+                    return null;
+                case "print":
+                    return this._printPackageMock();
+                default:
+                    throw new Error("Not implemented yet");
+            }
+        }
+
+        _selectPackageMaterial(sMaterialId) {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const aBatches =
+                this._oModel.getProperty(`${sBasePath}/batches`) || [];
+
+            this._oModel.setProperty(
+                `${sBasePath}/availableBatches`,
+                aBatches.filter(
+                    (oBatch) => oBatch.materialId === sMaterialId
+                )
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/batchId`,
+                ""
+            );
+            this._setPackageDerivedData();
+            this._clearPackageLinesAndPreview();
+        }
+
+        _selectPackageBatch(sBatchId) {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const aBatches =
+                this._oModel.getProperty(`${sBasePath}/batches`) || [];
+            const oBatch = aBatches.find(
+                (oCurrentBatch) => oCurrentBatch.id === sBatchId
+            );
+
+            this._setPackageDerivedData(oBatch);
+            this._clearPackageLinesAndPreview();
+
+            return oBatch || null;
+        }
+
+        _setPackageDerivedData(oBatch) {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/expirationDate`,
+                oBatch ? oBatch.expirationDate : ""
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/gtin`,
+                oBatch ? oBatch.gtin : ""
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/stockStatus`,
+                oBatch ? oBatch.stockStatus : ""
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/availableStock`,
+                oBatch ? oBatch.availableStock : 0
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest/packageCharacteristic`,
+                oBatch ? oBatch.packageCharacteristic : ""
+            );
+        }
+
+        _generatePackageDistribution() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const oRequest = this._oModel.getProperty(
+                `${sBasePath}/selectedPackageRequest`
+            );
+
+            this._validatePackageRequest(oRequest);
+
+            const iPackageCount = Number(oRequest.packageCount);
+            const aLines = [];
+
+            for (let iIndex = 1; iIndex <= iPackageCount; iIndex += 1) {
+                aLines.push({
+                    packageNumber: iIndex,
+                    quantity: Number(oRequest.quantityPerPackage),
+                    unit: oRequest.unit
+                });
+            }
+
+            this._oModel.setProperty(
+                `${sBasePath}/packageLines`,
+                aLines
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageLine`,
+                aLines[0] || this._getEmptyPackageLine()
+            );
+            this._recalculatePackageTotal();
+            this._resetPackagePreview();
+
+            return aLines;
+        }
+
+        _addPackageLine() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const oRequest = this._oModel.getProperty(
+                `${sBasePath}/selectedPackageRequest`
+            );
+            const aLines =
+                this._oModel.getProperty(`${sBasePath}/packageLines`) || [];
+            const iNextPackageNumber = aLines.reduce(
+                (iMax, oLine) =>
+                    Math.max(iMax, Number(oLine.packageNumber) || 0),
+                0
+            ) + 1;
+            const oLine = {
+                packageNumber: iNextPackageNumber,
+                quantity: Number(oRequest.quantityPerPackage) || 1,
+                unit: oRequest.unit || "UN"
+            };
+
+            aLines.push(oLine);
+            this._oModel.setProperty(
+                `${sBasePath}/packageLines`,
+                aLines
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageLine`,
+                oLine
+            );
+            this._recalculatePackageTotal();
+            this._resetPackagePreview();
+
+            return oLine;
+        }
+
+        _removePackageLine(sLinePath) {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const aLines =
+                this._oModel.getProperty(`${sBasePath}/packageLines`) || [];
+            const iIndex = this._getIndexFromPath(sLinePath);
+
+            if (iIndex >= 0 && iIndex < aLines.length) {
+                aLines.splice(iIndex, 1);
+            }
+
+            this._renumberPackageLines(aLines);
+            this._oModel.setProperty(
+                `${sBasePath}/packageLines`,
+                aLines
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageLine`,
+                aLines[0] || this._getEmptyPackageLine()
+            );
+            this._recalculatePackageTotal();
+            this._resetPackagePreview();
+        }
+
+        _selectPackageLine(sLinePath) {
+            const oLine = this._oModel.getProperty(sLinePath) ||
+                this._getEmptyPackageLine();
+
+            this._oModel.setProperty(
+                "/businessObjects/QuarantinePackages/selectedPackageLine",
+                Object.assign({}, oLine)
+            );
+            this._resetPackagePreview();
+
+            return oLine;
+        }
+
+        _updatePackageLine() {
+            this._recalculatePackageTotal();
+            this._resetPackagePreview();
+        }
+
+        _generatePackagePreview() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const aLines =
+                this._oModel.getProperty(`${sBasePath}/packageLines`) || [];
+            const oRequest = this._oModel.getProperty(
+                `${sBasePath}/selectedPackageRequest`
+            );
+            const oMessages = this._oModel.getProperty(
+                `${sBasePath}/validationMessages`
+            );
+
+            if (!aLines.length) {
+                throw new Error(oMessages.distributionRequired);
+            }
+
+            const oSelectedLine = this._getSelectedPackageLine(aLines);
+            const oMaterial = this._getPackageMaterial(
+                oRequest.materialId
+            );
+            const oPreview = {
+                generated: true,
+                materialName: oMaterial ? oMaterial.name : "",
+                lot: oRequest.batchId,
+                packageNumber: oSelectedLine.packageNumber,
+                quantity: Number(oSelectedLine.quantity),
+                unit: oSelectedLine.unit,
+                stockStatus: oRequest.stockStatus || "Cuarentena",
+                visualCodeValue: this._buildPackageVisualCodeValue(
+                    oRequest,
+                    oSelectedLine
+                )
+            };
+
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageLine`,
+                Object.assign({}, oSelectedLine)
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/preview`,
+                oPreview
+            );
+
+            return oPreview;
+        }
+
+        _printPackageMock() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const bGenerated = this._oModel.getProperty(
+                `${sBasePath}/preview/generated`
+            );
+            const oMessages = this._oModel.getProperty(
+                `${sBasePath}/validationMessages`
+            );
+
+            if (!bGenerated) {
+                throw new Error(oMessages.previewRequired);
+            }
+
+            return {
+                message: this._oModel.getProperty(
+                    `${sBasePath}/labelTexts/printMock`
+                )
+            };
+        }
+
+        _clearPackageRequest() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageRequest`,
+                {
+                    materialId: "",
+                    batchId: "",
+                    packageCount: 1,
+                    quantityPerPackage: 1,
+                    unit: "UN",
+                    expirationDate: "",
+                    gtin: "",
+                    stockStatus: "",
+                    availableStock: 0,
+                    packageCharacteristic: ""
+                }
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/availableBatches`,
+                []
+            );
+            this._clearPackageLinesAndPreview();
+        }
+
+        _clearPackageLinesAndPreview() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+
+            this._oModel.setProperty(
+                `${sBasePath}/packageLines`,
+                []
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/selectedPackageLine`,
+                this._getEmptyPackageLine()
+            );
+            this._oModel.setProperty(
+                `${sBasePath}/totalDistributed`,
+                0
+            );
+            this._resetPackagePreview();
+        }
+
+        _resetPackagePreview() {
+            this._oModel.setProperty(
+                "/businessObjects/QuarantinePackages/preview",
+                {
+                    generated: false,
+                    materialName: "",
+                    lot: "",
+                    packageNumber: 0,
+                    quantity: 0,
+                    unit: "",
+                    stockStatus: "Cuarentena",
+                    visualCodeValue: ""
+                }
+            );
+        }
+
+        _validatePackageRequest(oRequest) {
+            const oMessages = this._oModel.getProperty(
+                "/businessObjects/QuarantinePackages/validationMessages"
+            );
+
+            if (!oRequest.materialId) {
+                throw new Error(oMessages.materialRequired);
+            }
+            if (!oRequest.batchId) {
+                throw new Error(oMessages.batchRequired);
+            }
+            if (!Number.isFinite(Number(oRequest.packageCount)) ||
+                Number(oRequest.packageCount) <= 0) {
+                throw new Error(oMessages.packageCountInvalid);
+            }
+            if (!Number.isFinite(Number(oRequest.quantityPerPackage)) ||
+                Number(oRequest.quantityPerPackage) <= 0) {
+                throw new Error(oMessages.quantityPerPackageInvalid);
+            }
+            if (!oRequest.unit) {
+                throw new Error(oMessages.unitRequired);
+            }
+        }
+
+        _recalculatePackageTotal() {
+            const sBasePath = "/businessObjects/QuarantinePackages";
+            const aLines =
+                this._oModel.getProperty(`${sBasePath}/packageLines`) || [];
+            const iTotal = aLines.reduce(
+                (iSum, oLine) =>
+                    iSum + (Number(oLine.quantity) || 0),
+                0
+            );
+
+            this._oModel.setProperty(
+                `${sBasePath}/totalDistributed`,
+                iTotal
+            );
+        }
+
+        _renumberPackageLines(aLines) {
+            aLines.forEach((oLine, iIndex) => {
+                oLine.packageNumber = iIndex + 1;
+            });
+        }
+
+        _getSelectedPackageLine(aLines) {
+            const oSelectedLine = this._oModel.getProperty(
+                "/businessObjects/QuarantinePackages/selectedPackageLine"
+            );
+
+            if (oSelectedLine && oSelectedLine.packageNumber) {
+                return aLines.find(
+                    (oLine) =>
+                        oLine.packageNumber === oSelectedLine.packageNumber
+                ) || aLines[0];
+            }
+
+            return aLines[0];
+        }
+
+        _getPackageMaterial(sMaterialId) {
+            const aMaterials = this._oModel.getProperty(
+                "/businessObjects/QuarantinePackages/materials"
+            ) || [];
+
+            return aMaterials.find(
+                (oMaterial) => oMaterial.id === sMaterialId
+            );
+        }
+
+        _buildPackageVisualCodeValue(oRequest, oLine) {
+            return [
+                "BULTO",
+                oRequest.materialId,
+                oRequest.batchId,
+                oLine.packageNumber,
+                Number(oLine.quantity),
+                oLine.unit
+            ].join("|");
+        }
+
+        _getEmptyPackageLine() {
+            return {
+                packageNumber: 0,
+                quantity: 0,
+                unit: ""
+            };
+        }
+
+        _getIndexFromPath(sPath) {
+            const sIndex = String(sPath || "").split("/").pop();
+            const iIndex = Number(sIndex);
+
+            return Number.isInteger(iIndex) ? iIndex : -1;
         }
 
         _mapSelectedProduct(oMaterial) {

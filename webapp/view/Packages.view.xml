@@ -1,0 +1,348 @@
+<mvc:View
+    controllerName="etiquetas.controller.Packages"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m">
+
+    <f:DynamicPage
+        id="packagesPage"
+        headerExpanded="true"
+        toggleHeaderOnTitleClick="false"
+        showFooter="true">
+
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title
+                        text="{i18n>packagesTitle}"
+                        level="H1" />
+                </f:heading>
+
+                <f:expandedContent>
+                    <Text text="{i18n>packagesSubtitle}" />
+                </f:expandedContent>
+
+                <f:navigationActions>
+                    <Button
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        tooltip="{i18n>backButtonTooltip}"
+                        press=".onNavBack" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:content>
+            <l:Grid
+                defaultSpan="XL12 L12 M12 S12"
+                hSpacing="1"
+                vSpacing="1"
+                class="sapUiResponsiveContentPadding">
+
+                <VBox>
+                    <layoutData>
+                        <l:GridData span="XL8 L8 M12 S12" />
+                    </layoutData>
+
+                    <Panel
+                        headerText="{i18n>packagesSelectionSection}"
+                        class="sapUiNoContentPadding sapUiSmallMarginBottom">
+                        <form:SimpleForm
+                            editable="true"
+                            layout="ResponsiveGridLayout"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            labelSpanXL="3"
+                            labelSpanL="3"
+                            labelSpanM="4"
+                            labelSpanS="12"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1"
+                            class="sapUiSmallMarginTopBottom">
+
+                            <Label
+                                text="{i18n>packagesMaterial}"
+                                required="true" />
+                            <ComboBox
+                                selectedKey="{app>selectedPackageRequest/materialId}"
+                                items="{
+                                    path: 'app>materials',
+                                    templateShareable: false
+                                }"
+                                selectionChange=".onMaterialChange"
+                                width="100%">
+                                <core:Item
+                                    key="{app>id}"
+                                    text="{app>id} - {app>name}" />
+                            </ComboBox>
+
+                            <Label
+                                text="{i18n>packagesBatch}"
+                                required="true" />
+                            <ComboBox
+                                selectedKey="{app>selectedPackageRequest/batchId}"
+                                items="{
+                                    path: 'app>availableBatches',
+                                    templateShareable: false
+                                }"
+                                enabled="{= !!${app>selectedPackageRequest/materialId} }"
+                                selectionChange=".onBatchChange"
+                                width="100%">
+                                <core:Item
+                                    key="{app>id}"
+                                    text="{app>id}" />
+                            </ComboBox>
+
+                            <Label
+                                text="{i18n>packagesPackageCount}"
+                                required="true" />
+                            <StepInput
+                                value="{app>selectedPackageRequest/packageCount}"
+                                min="1"
+                                step="1"
+                                width="100%" />
+
+                            <Label
+                                text="{i18n>packagesQuantityPerPackage}"
+                                required="true" />
+                            <StepInput
+                                value="{app>selectedPackageRequest/quantityPerPackage}"
+                                min="1"
+                                step="1"
+                                width="100%" />
+
+                            <Label
+                                text="{i18n>packagesUnit}"
+                                required="true" />
+                            <Select
+                                selectedKey="{app>selectedPackageRequest/unit}"
+                                items="{
+                                    path: 'app>units',
+                                    templateShareable: false
+                                }"
+                                width="100%">
+                                <core:Item
+                                    key="{app>id}"
+                                    text="{app>name}" />
+                            </Select>
+                        </form:SimpleForm>
+                    </Panel>
+
+                    <Panel
+                        headerText="{i18n>packagesDistributionSection}"
+                        class="sapUiNoContentPadding">
+                        <VBox class="sapUiSmallMargin">
+                            <Toolbar>
+                                <Title
+                                    text="{i18n>packagesDistributionTable}"
+                                    level="H4" />
+                                <ToolbarSpacer />
+                                <Button
+                                    text="{i18n>packagesAddLine}"
+                                    icon="sap-icon://add"
+                                    press=".onAddLine" />
+                            </Toolbar>
+
+                            <Table
+                                id="packagesTable"
+                                mode="SingleSelectMaster"
+                                items="{
+                                    path: 'app>packageLines',
+                                    templateShareable: false
+                                }"
+                                selectionChange=".onLineSelectionChange"
+                                growing="true"
+                                growingThreshold="20"
+                                class="sapUiSmallMarginTop">
+                                <columns>
+                                    <Column>
+                                        <Text text="{i18n>packagesPackageNumber}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{i18n>packagesQuantity}" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="{i18n>packagesUnit}" />
+                                    </Column>
+                                    <Column hAlign="End">
+                                        <Text text="{i18n>packagesActions}" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem type="Active">
+                                        <cells>
+                                            <ObjectIdentifier
+                                                title="{app>packageNumber}" />
+                                            <Input
+                                                value="{app>quantity}"
+                                                type="Number"
+                                                change=".onLineChange" />
+                                            <Select
+                                                selectedKey="{app>unit}"
+                                                items="{
+                                                    path: 'app>/businessObjects/QuarantinePackages/units',
+                                                    templateShareable: false
+                                                }"
+                                                change=".onLineChange">
+                                                <core:Item
+                                                    key="{app>id}"
+                                                    text="{app>name}" />
+                                            </Select>
+                                            <Button
+                                                icon="sap-icon://delete"
+                                                type="Transparent"
+                                                tooltip="{i18n>packagesRemoveLine}"
+                                                press=".onRemoveLine" />
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+
+                            <ObjectStatus
+                                text="{i18n>packagesTotalDistributed}: {app>totalDistributed}"
+                                state="Information"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </Panel>
+                </VBox>
+
+                <VBox>
+                    <layoutData>
+                        <l:GridData span="XL4 L4 M12 S12" />
+                    </layoutData>
+
+                    <Panel
+                        headerText="{i18n>packagesDerivedSection}"
+                        class="sapUiNoContentPadding sapUiSmallMarginBottom">
+                        <VBox class="sapUiSmallMargin">
+                            <ObjectAttribute
+                                title="{i18n>packagesExpirationDate}"
+                                text="{app>selectedPackageRequest/expirationDate}" />
+                            <ObjectAttribute
+                                title="{i18n>packagesGtin}"
+                                text="{app>selectedPackageRequest/gtin}"
+                                class="sapUiSmallMarginTop" />
+                            <ObjectStatus
+                                title="{i18n>packagesStockStatus}"
+                                text="{app>selectedPackageRequest/stockStatus}"
+                                state="Warning"
+                                class="sapUiSmallMarginTop" />
+                            <ObjectAttribute
+                                title="{i18n>packagesAvailableStock}"
+                                text="{app>selectedPackageRequest/availableStock}"
+                                class="sapUiSmallMarginTop" />
+                            <ObjectAttribute
+                                title="{i18n>packagesCharacteristic}"
+                                text="{app>selectedPackageRequest/packageCharacteristic}"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </Panel>
+
+                    <Panel
+                        headerText="{i18n>packagesPreviewSection}"
+                        class="sapUiNoContentPadding">
+                        <VBox class="sapUiSmallMargin">
+                            <VBox
+                                alignItems="Center"
+                                visible="{= !${app>preview/generated} }"
+                                class="sapUiMediumMargin">
+                                <core:Icon
+                                    src="sap-icon://lateness"
+                                    size="2rem" />
+                                <Title
+                                    text="{app>labelTexts/previewTitle}"
+                                    level="H4"
+                                    class="sapUiSmallMarginTop" />
+                                <Text
+                                    text="{app>labelTexts/previewEmpty}"
+                                    textAlign="Center"
+                                    wrapping="true"
+                                    class="sapUiTinyMarginTop" />
+                            </VBox>
+
+                            <VBox visible="{app>preview/generated}">
+                                <Panel
+                                    headerText="{i18n>packagesPackageLabel}"
+                                    class="sapUiNoContentPadding">
+                                    <VBox class="sapUiSmallMargin">
+                                        <Title
+                                            text="{app>preview/materialName}"
+                                            level="H5" />
+                                        <ObjectStatus
+                                            text="{app>preview/stockStatus}"
+                                            state="Warning"
+                                            class="sapUiTinyMarginTop" />
+
+                                        <l:Grid
+                                            defaultSpan="XL6 L6 M6 S12"
+                                            hSpacing="1"
+                                            vSpacing="0"
+                                            class="sapUiSmallMarginTop">
+                                            <ObjectAttribute
+                                                title="{i18n>packagesBatch}"
+                                                text="{app>preview/lot}" />
+                                            <ObjectAttribute
+                                                title="{i18n>packagesPackageNumber}"
+                                                text="{app>preview/packageNumber}" />
+                                            <ObjectAttribute
+                                                title="{i18n>packagesQuantity}"
+                                                text="{app>preview/quantity}" />
+                                            <ObjectAttribute
+                                                title="{i18n>packagesUnit}"
+                                                text="{app>preview/unit}" />
+                                        </l:Grid>
+
+                                        <Panel
+                                            headerText="{i18n>packagesVisualCode}"
+                                            class="sapUiNoContentPadding sapUiSmallMarginTop">
+                                            <VBox class="sapUiSmallMargin">
+                                                <Text
+                                                    text="{app>preview/visualCodeValue}"
+                                                    wrapping="true" />
+                                            </VBox>
+                                        </Panel>
+                                    </VBox>
+                                </Panel>
+                            </VBox>
+                        </VBox>
+                    </Panel>
+                </VBox>
+            </l:Grid>
+        </f:content>
+
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button
+                    text="{i18n>packagesGenerateDistribution}"
+                    type="Emphasized"
+                    icon="sap-icon://table-view"
+                    press=".onGenerateDistribution" />
+                <Button
+                    text="{i18n>packagesGeneratePreview}"
+                    icon="sap-icon://show"
+                    press=".onGeneratePreview" />
+                <Button
+                    text="{i18n>packagesPrint}"
+                    icon="sap-icon://print"
+                    enabled="{app>preview/generated}"
+                    press=".onPrint" />
+                <Button
+                    text="{i18n>packagesClear}"
+                    icon="sap-icon://clear-all"
+                    press=".onClear" />
+                <Button
+                    text="{i18n>backButtonTooltip}"
+                    icon="sap-icon://nav-back"
+                    press=".onNavBack" />
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>

@@ -93,7 +93,7 @@
           "name": "packages",
           "pattern": "packages",
           "target": [
-            "TargetModule"
+            "TargetPackages"
           ]
         },
         {
@@ -165,6 +165,10 @@
         "TargetLabels": {
           "id": "Labels",
           "name": "Labels"
+        },
+        "TargetPackages": {
+          "id": "Packages",
+          "name": "Packages"
         }
       }
     },

@@ -37,9 +37,9 @@
             "report": false
           },
           "title": "Bultos cuarentena",
-          "description": "Consulta de bultos en cuarentena",
+          "description": "Distribución de bultos en cuarentena",
           "icon": "sap-icon://lateness",
-          "statusText": "No implementado",
+          "statusText": "Prototipo mock",
           "order": 20
         },
         {
@@ -379,6 +379,124 @@
           "showGtin": true
         },
         "gs1String": ""
+      }
+    },
+    "QuarantinePackages": {
+      "materials": [
+        {
+          "id": "MAT-100001",
+          "name": "Klonal Hospitalario 500 mg",
+          "description": "Producto hospitalario de uso institucional",
+          "gtin": "07791234560011"
+        },
+        {
+          "id": "MAT-100002",
+          "name": "Klonal COMEX 250 mg",
+          "description": "Presentación mock destinada a mercado externo",
+          "gtin": "07791234560028"
+        },
+        {
+          "id": "MAT-100003",
+          "name": "Klonal Solución 100 ml",
+          "description": "Solución farmacéutica de ejemplo",
+          "gtin": "07791234560035"
+        }
+      ],
+      "batches": [
+        {
+          "id": "L24001",
+          "materialId": "MAT-100001",
+          "expirationDate": "2027-06-30",
+          "gtin": "07791234560011",
+          "stockStatus": "Cuarentena",
+          "availableStock": 500,
+          "packageCharacteristic": "BULTOS"
+        },
+        {
+          "id": "L24002",
+          "materialId": "MAT-100001",
+          "expirationDate": "2027-12-31",
+          "gtin": "07791234560011",
+          "stockStatus": "Cuarentena",
+          "availableStock": 320,
+          "packageCharacteristic": "BULTOS"
+        },
+        {
+          "id": "C24010",
+          "materialId": "MAT-100002",
+          "expirationDate": "2028-03-31",
+          "gtin": "07791234560028",
+          "stockStatus": "Cuarentena",
+          "availableStock": 180,
+          "packageCharacteristic": "BULTOS"
+        },
+        {
+          "id": "S24005",
+          "materialId": "MAT-100003",
+          "expirationDate": "2027-09-30",
+          "gtin": "07791234560035",
+          "stockStatus": "Cuarentena",
+          "availableStock": 240,
+          "packageCharacteristic": ""
+        }
+      ],
+      "availableBatches": [],
+      "units": [
+        {
+          "id": "UN",
+          "name": "Unidad"
+        },
+        {
+          "id": "CJ",
+          "name": "Caja"
+        },
+        {
+          "id": "PAQ",
+          "name": "Paquete"
+        }
+      ],
+      "selectedPackageRequest": {
+        "materialId": "",
+        "batchId": "",
+        "packageCount": 1,
+        "quantityPerPackage": 1,
+        "unit": "UN",
+        "expirationDate": "",
+        "gtin": "",
+        "stockStatus": "",
+        "availableStock": 0,
+        "packageCharacteristic": ""
+      },
+      "packageLines": [],
+      "selectedPackageLine": {
+        "packageNumber": 0,
+        "quantity": 0,
+        "unit": ""
+      },
+      "totalDistributed": 0,
+      "preview": {
+        "generated": false,
+        "materialName": "",
+        "lot": "",
+        "packageNumber": 0,
+        "quantity": 0,
+        "unit": "",
+        "stockStatus": "Cuarentena",
+        "visualCodeValue": ""
+      },
+      "labelTexts": {
+        "previewTitle": "Vista previa mock",
+        "previewEmpty": "Genere una distribución y seleccione una línea para visualizar el bulto.",
+        "printMock": "Impresión mock de bulto confirmada. No se generó ningún documento ni salida física."
+      },
+      "validationMessages": {
+        "materialRequired": "Seleccione un material.",
+        "batchRequired": "Seleccione un lote.",
+        "packageCountInvalid": "La cantidad de bultos debe ser mayor a cero.",
+        "quantityPerPackageInvalid": "La cantidad por bulto debe ser mayor a cero.",
+        "unitRequired": "Seleccione una unidad.",
+        "distributionRequired": "Genere una distribución antes de crear la vista previa.",
+        "previewRequired": "Genere una vista previa antes de imprimir."
       }
     }
   }
