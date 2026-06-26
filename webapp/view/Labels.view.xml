@@ -5,6 +5,7 @@
     xmlns:f="sap.f"
     xmlns:l="sap.ui.layout"
     xmlns:form="sap.ui.layout.form"
+    xmlns:label="etiquetas.control"
     xmlns="sap.m">
 
     <f:DynamicPage
@@ -262,34 +263,40 @@
                             </VBox>
 
                             <VBox visible="{app>preview/generated}">
-                                <ObjectHeader
-                                    title="{app>preview/materialName}"
-                                    intro="{app>labelTexts/previewTitle}"
-                                    icon="sap-icon://bar-code">
-                                    <statuses>
-                                        <ObjectStatus
-                                            text="{app>preview/format}"
-                                            state="Success" />
-                                    </statuses>
+                                <label:LabelPreview
+                                    materialName="{app>preview/materialName}"
+                                    presentation="{app>selectedProduct/content}"
+                                    lot="{app>preview/lot}"
+                                    expirationDate="{app>preview/expirationDate}"
+                                    gtin="{app>preview/gtin}"
+                                    format="{app>preview/format}"
+                                    labelLayout="{app>preview/visualCode/labelLayout}"
+                                    visualCodeType="{app>preview/visualCode/type}"
+                                    visualCodeValue="{app>preview/visualCode/value}"
+                                    gs1String="{app>preview/gs1String}"
+                                    showGtin="{app>preview/visualCode/showGtin}" />
 
-                                    <attributes>
+                                <Panel
+                                    headerText="{i18n>labelsTechnicalInformation}"
+                                    expandable="true"
+                                    expanded="false"
+                                    class="sapUiNoContentPadding sapUiSmallMarginTop">
+                                    <VBox class="sapUiSmallMargin">
                                         <ObjectAttribute
-                                            title="{i18n>labelsBatch}"
-                                            text="{app>preview/lot}" />
+                                            title="{i18n>labelsVisualCode}"
+                                            text="{app>preview/visualCode/title}" />
                                         <ObjectAttribute
-                                            title="{i18n>labelsExpirationDate}"
-                                            text="{app>preview/expirationDate}" />
-                                        <ObjectAttribute
-                                            title="{i18n>labelsGtin}"
-                                            text="{app>preview/gtin}" />
-                                        <ObjectAttribute
-                                            title="{i18n>labelsMarket}"
-                                            text="{app>preview/market}" />
-                                        <ObjectAttribute
-                                            title="{i18n>labelsQuantity}"
-                                            text="{app>preview/quantity}" />
-                                    </attributes>
-                                </ObjectHeader>
+                                            title="{i18n>labelsFormat}"
+                                            text="{app>preview/format}"
+                                            class="sapUiTinyMarginTop" />
+                                        <Label
+                                            text="{i18n>labelsGs1String}"
+                                            class="sapUiSmallMarginTop" />
+                                        <Text
+                                            text="{app>preview/gs1String}"
+                                            wrapping="true" />
+                                    </VBox>
+                                </Panel>
                             </VBox>
                         </VBox>
                     </Panel>

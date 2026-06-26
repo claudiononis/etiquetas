@@ -229,25 +229,29 @@
           "id": "L24001",
           "materialId": "MAT-100001",
           "expirationDate": "2027-06-30",
-          "gtin": "07791234560011"
+          "gtin": "07791234560011",
+          "sscc": "000779123456000001"
         },
         {
           "id": "L24002",
           "materialId": "MAT-100001",
           "expirationDate": "2027-12-31",
-          "gtin": "07791234560011"
+          "gtin": "07791234560011",
+          "sscc": "000779123456000002"
         },
         {
           "id": "C24010",
           "materialId": "MAT-100002",
           "expirationDate": "2028-03-31",
-          "gtin": "07791234560028"
+          "gtin": "07791234560028",
+          "sscc": "000779123456000003"
         },
         {
           "id": "S24005",
           "materialId": "MAT-100003",
           "expirationDate": "2027-09-30",
-          "gtin": "07791234560035"
+          "gtin": "07791234560035",
+          "sscc": "000779123456000004"
         }
       ],
       "availableBatches": [],
@@ -264,27 +268,65 @@
       "labelFormats": [
         {
           "id": "HOSPITAL_LARGE",
-          "name": "Hospitalaria grande"
+          "name": "Hospitalaria grande",
+          "visualCodeType": "LINEAR_EAN",
+          "visualCodeTitle": "EAN/GTIN lineal mock",
+          "visualCodeDescription": "Código lineal informativo preparado para reemplazo por generador real.",
+          "gs1Profile": "NONE",
+          "labelLayout": "HOSPITAL_LARGE",
+          "showGtin": true
         },
         {
           "id": "HOSPITAL_54X88",
-          "name": "Hospitalaria 54x88"
+          "name": "Hospitalaria 54x88",
+          "visualCodeType": "LINEAR_EAN",
+          "visualCodeTitle": "EAN/GTIN lineal mock",
+          "visualCodeDescription": "Código lineal informativo preparado para reemplazo por generador real.",
+          "gs1Profile": "NONE",
+          "labelLayout": "HOSPITAL_COMPACT",
+          "showGtin": true
         },
         {
           "id": "FAM",
-          "name": "FAM"
+          "name": "FAM",
+          "visualCodeType": "DATAMATRIX",
+          "visualCodeTitle": "Datamatrix mock",
+          "visualCodeDescription": "Placeholder visual preparado para futura librería Datamatrix.",
+          "gs1Profile": "TRACEABILITY",
+          "labelLayout": "FAM",
+          "showGtin": true
         },
         {
           "id": "BOX_THIRD_PACKAGE",
-          "name": "Caja envase 3°"
+          "name": "Caja envase 3°",
+          "visualCodeType": "DATAMATRIX_LOGISTIC",
+          "visualCodeTitle": "Datamatrix GS1 logístico mock",
+          "visualCodeDescription": "Placeholder visual preparado para identificación logística.",
+          "gs1Profile": "LOGISTIC",
+          "includeSscc": false,
+          "labelLayout": "LOGISTIC",
+          "showGtin": true
         },
         {
           "id": "PALLET",
-          "name": "Pallet"
+          "name": "Pallet",
+          "visualCodeType": "DATAMATRIX_LOGISTIC",
+          "visualCodeTitle": "Datamatrix GS1 logístico mock",
+          "visualCodeDescription": "Placeholder visual preparado para identificación logística.",
+          "gs1Profile": "LOGISTIC",
+          "includeSscc": true,
+          "labelLayout": "PALLET",
+          "showGtin": true
         },
         {
           "id": "OPP_BATCH_EXPIRY",
-          "name": "OPP lote/vto"
+          "name": "OPP lote/vto",
+          "visualCodeType": "BATCH_EXPIRY",
+          "visualCodeTitle": "Lote y vencimiento",
+          "visualCodeDescription": "Formato informativo sin GS1 técnico.",
+          "gs1Profile": "NONE",
+          "labelLayout": "OPP_BATCH_EXPIRY",
+          "showGtin": false
         }
       ],
       "labelTexts": {
@@ -326,7 +368,17 @@
         "gtin": "",
         "format": "",
         "market": "",
-        "quantity": 0
+        "quantity": 0,
+        "visualCode": {
+          "type": "",
+          "title": "",
+          "description": "",
+          "icon": "",
+          "value": "",
+          "labelLayout": "",
+          "showGtin": true
+        },
+        "gs1String": ""
       }
     }
   }

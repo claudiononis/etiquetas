@@ -210,9 +210,15 @@ sap.ui.define([
                 this._oModel.getProperty(`${sBasePath}/labelFormats`) || [];
             const aMarkets =
                 this._oModel.getProperty(`${sBasePath}/markets`) || [];
+            const aBatches =
+                this._oModel.getProperty(`${sBasePath}/batches`) || [];
             const oMaterial = aMaterials.find(
                 (oCurrentMaterial) =>
                     oCurrentMaterial.id === oRequest.materialId
+            );
+            const oBatch = aBatches.find(
+                (oCurrentBatch) =>
+                    oCurrentBatch.id === oRequest.batchId
             );
             const oFormat = aFormats.find(
                 (oCurrentFormat) =>
@@ -230,7 +236,17 @@ sap.ui.define([
                 gtin: oRequest.gtin,
                 format: oFormat ? oFormat.name : "",
                 market: oMarket ? oMarket.name : "",
-                quantity: Number(oRequest.quantity)
+                quantity: Number(oRequest.quantity),
+                visualCode: this._buildLabelVisualCode(
+                    oFormat,
+                    oRequest,
+                    oBatch
+                ),
+                gs1String: this._buildLabelGs1String(
+                    oFormat,
+                    oRequest,
+                    oBatch
+                )
             };
 
             this._oModel.setProperty(
@@ -298,9 +314,113 @@ sap.ui.define([
                     gtin: "",
                     format: "",
                     market: "",
-                    quantity: 0
+                    quantity: 0,
+                    visualCode: {
+                        type: "",
+                        title: "",
+                        description: "",
+                        icon: "",
+                        value: "",
+                        labelLayout: "",
+                        showGtin: true
+                    },
+                    gs1String: ""
                 }
             );
+        }
+
+        _buildLabelVisualCode(oFormat, oRequest, oBatch) {
+            const sType = oFormat ? oFormat.visualCodeType : "";
+
+            return {
+                type: sType,
+                title: oFormat ? oFormat.visualCodeTitle : "",
+                description: oFormat ? oFormat.visualCodeDescription : "",
+                icon: this._getLabelVisualCodeIcon(sType),
+                value: this._getLabelVisualCodeValue(
+                    sType,
+                    oRequest,
+                    oBatch
+                ),
+                labelLayout: oFormat ? oFormat.labelLayout : "",
+                showGtin: oFormat ? oFormat.showGtin !== false : true
+            };
+        }
+
+        _getLabelVisualCodeIcon(sType) {
+            switch (sType) {
+                case "LINEAR_EAN":
+                    return "sap-icon://bar-code";
+                case "DATAMATRIX":
+                case "DATAMATRIX_LOGISTIC":
+                    return "sap-icon://qr-code";
+                case "BATCH_EXPIRY":
+                    return "sap-icon://tag";
+                default:
+                    return "sap-icon://show";
+            }
+        }
+
+        _getLabelVisualCodeValue(sType, oRequest, oBatch) {
+            if (sType === "BATCH_EXPIRY") {
+                return `Lote ${oRequest.batchId} · Vto ${oRequest.expirationDate}`;
+            }
+
+            if (sType === "LINEAR_EAN") {
+                return oRequest.gtin;
+            }
+
+            if (sType === "DATAMATRIX_LOGISTIC" &&
+                oBatch &&
+                oBatch.sscc) {
+                return oBatch.sscc;
+            }
+
+            return oRequest.gtin;
+        }
+
+        _buildLabelGs1String(oFormat, oRequest, oBatch) {
+            if (!oFormat || oFormat.gs1Profile === "NONE") {
+                return "No aplica para este formato.";
+            }
+
+            const sExpirationDate =
+                this._formatGs1ExpirationDate(
+                    oRequest.expirationDate
+                );
+
+            if (oFormat.gs1Profile === "TRACEABILITY") {
+                return `(01)${oRequest.gtin}` +
+                    `(17)${sExpirationDate}` +
+                    `(10)${oRequest.batchId}`;
+            }
+
+            if (oFormat.gs1Profile === "LOGISTIC") {
+                let sGs1String = `(02)${this._toGtin14(oRequest.gtin)}` +
+                    `(17)${sExpirationDate}` +
+                    `(10)${oRequest.batchId}` +
+                    `(37)${Number(oRequest.quantity)}`;
+
+                if (oFormat.includeSscc && oBatch && oBatch.sscc) {
+                    sGs1String += `(00)${oBatch.sscc}`;
+                }
+
+                return sGs1String;
+            }
+
+            return "No aplica para este formato.";
+        }
+
+        _formatGs1ExpirationDate(sExpirationDate) {
+            if (!sExpirationDate) {
+                return "";
+            }
+
+            return sExpirationDate.replace(/-/g, "").slice(2);
+        }
+
+        _toGtin14(sGtin) {
+            return String(sGtin || "").padStart(14, "0").slice(-14);
         }
 
         _mapSelectedProduct(oMaterial) {
