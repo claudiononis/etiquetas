@@ -21,7 +21,7 @@
           "title": "Etiquetas hospitalarias / COMEX",
           "description": "Gestión de etiquetas",
           "icon": "sap-icon://bar-code",
-          "statusText": "No implementado",
+          "statusText": "Prototipo mock",
           "order": 10
         },
         {
@@ -186,5 +186,148 @@
         }
       ]
     }
-  ]
+  ],
+  "businessObjects": {
+    "Labels": {
+      "materials": [
+        {
+          "id": "MAT-100001",
+          "name": "Klonal Hospitalario 500 mg",
+          "description": "Producto hospitalario de uso institucional",
+          "certificate": "Certificado mock N° 1001",
+          "content": "10 frascos ampolla",
+          "technicalDirector": "Dirección técnica mock",
+          "storage": "Conservar entre 15 °C y 25 °C",
+          "regulatoryText": "Venta bajo receta. Uso hospitalario. Información mock sin validez regulatoria.",
+          "gtin": "07791234560011"
+        },
+        {
+          "id": "MAT-100002",
+          "name": "Klonal COMEX 250 mg",
+          "description": "Presentación mock destinada a mercado externo",
+          "certificate": "Certificado mock N° 1002",
+          "content": "20 unidades",
+          "technicalDirector": "Dirección técnica mock",
+          "storage": "Conservar en lugar seco y protegido de la luz",
+          "regulatoryText": "Texto regulatorio COMEX de demostración. Verificar destino antes de imprimir.",
+          "gtin": "07791234560028"
+        },
+        {
+          "id": "MAT-100003",
+          "name": "Klonal Solución 100 ml",
+          "description": "Solución farmacéutica de ejemplo",
+          "certificate": "Certificado mock N° 1003",
+          "content": "1 frasco de 100 ml",
+          "technicalDirector": "Dirección técnica mock",
+          "storage": "Conservar a temperatura ambiente",
+          "regulatoryText": "Información mock para validación de experiencia de usuario.",
+          "gtin": "07791234560035"
+        }
+      ],
+      "batches": [
+        {
+          "id": "L24001",
+          "materialId": "MAT-100001",
+          "expirationDate": "2027-06-30",
+          "gtin": "07791234560011"
+        },
+        {
+          "id": "L24002",
+          "materialId": "MAT-100001",
+          "expirationDate": "2027-12-31",
+          "gtin": "07791234560011"
+        },
+        {
+          "id": "C24010",
+          "materialId": "MAT-100002",
+          "expirationDate": "2028-03-31",
+          "gtin": "07791234560028"
+        },
+        {
+          "id": "S24005",
+          "materialId": "MAT-100003",
+          "expirationDate": "2027-09-30",
+          "gtin": "07791234560035"
+        }
+      ],
+      "availableBatches": [],
+      "markets": [
+        {
+          "id": "NATIONAL",
+          "name": "Nacional"
+        },
+        {
+          "id": "COMEX",
+          "name": "COMEX"
+        }
+      ],
+      "labelFormats": [
+        {
+          "id": "HOSPITAL_LARGE",
+          "name": "Hospitalaria grande"
+        },
+        {
+          "id": "HOSPITAL_54X88",
+          "name": "Hospitalaria 54x88"
+        },
+        {
+          "id": "FAM",
+          "name": "FAM"
+        },
+        {
+          "id": "BOX_THIRD_PACKAGE",
+          "name": "Caja envase 3°"
+        },
+        {
+          "id": "PALLET",
+          "name": "Pallet"
+        },
+        {
+          "id": "OPP_BATCH_EXPIRY",
+          "name": "OPP lote/vto"
+        }
+      ],
+      "labelTexts": {
+        "previewTitle": "Vista previa mock",
+        "previewEmpty": "Complete los datos obligatorios y genere una vista previa.",
+        "printMock": "Impresión mock confirmada. No se generó ningún documento ni salida física."
+      },
+      "validationMessages": {
+        "materialRequired": "Seleccione un material.",
+        "batchRequired": "Seleccione un lote.",
+        "marketRequired": "Seleccione un mercado.",
+        "formatRequired": "Seleccione un formato de etiqueta.",
+        "quantityInvalid": "La cantidad debe ser mayor a cero.",
+        "previewRequired": "Genere una vista previa antes de imprimir."
+      },
+      "selectedLabelRequest": {
+        "materialId": "",
+        "batchId": "",
+        "market": "NATIONAL",
+        "formatId": "HOSPITAL_LARGE",
+        "quantity": 1,
+        "expirationDate": "",
+        "gtin": ""
+      },
+      "selectedProduct": {
+        "name": "",
+        "description": "",
+        "certificate": "",
+        "content": "",
+        "technicalDirector": "",
+        "storage": "",
+        "regulatoryText": ""
+      },
+      "preview": {
+        "generated": false,
+        "materialName": "",
+        "lot": "",
+        "expirationDate": "",
+        "gtin": "",
+        "format": "",
+        "market": "",
+        "quantity": 0
+      }
+    }
+  }
 }

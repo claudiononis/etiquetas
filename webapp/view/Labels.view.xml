@@ -1,0 +1,324 @@
+<mvc:View
+    controllerName="etiquetas.controller.Labels"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.f"
+    xmlns:l="sap.ui.layout"
+    xmlns:form="sap.ui.layout.form"
+    xmlns="sap.m">
+
+    <f:DynamicPage
+        id="labelsPage"
+        headerExpanded="true"
+        toggleHeaderOnTitleClick="false"
+        showFooter="true">
+
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title
+                        text="{i18n>labelsTitle}"
+                        level="H1" />
+                </f:heading>
+
+                <f:expandedContent>
+                    <Text text="{i18n>labelsSubtitle}" />
+                </f:expandedContent>
+
+                <f:navigationActions>
+                    <Button
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        tooltip="{i18n>backButtonTooltip}"
+                        press=".onNavBack" />
+                </f:navigationActions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:content>
+            <l:Grid
+                defaultSpan="XL12 L12 M12 S12"
+                hSpacing="1"
+                vSpacing="1"
+                class="sapUiResponsiveContentPadding">
+
+                <VBox>
+                    <layoutData>
+                        <l:GridData span="XL8 L8 M12 S12" />
+                    </layoutData>
+
+                    <Panel
+                        headerText="{i18n>labelsSelectionSection}"
+                        class="sapUiNoContentPadding sapUiSmallMarginBottom">
+                        <form:SimpleForm
+                            editable="true"
+                            layout="ResponsiveGridLayout"
+                            adjustLabelSpan="false"
+                            emptySpanXL="0"
+                            emptySpanL="0"
+                            emptySpanM="0"
+                            emptySpanS="0"
+                            labelSpanXL="3"
+                            labelSpanL="3"
+                            labelSpanM="4"
+                            labelSpanS="12"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1"
+                            class="sapUiSmallMarginTopBottom">
+
+                            <Label
+                                text="{i18n>labelsMaterial}"
+                                required="true" />
+                            <ComboBox
+                                selectedKey="{app>selectedLabelRequest/materialId}"
+                                items="{
+                                    path: 'app>materials',
+                                    templateShareable: false
+                                }"
+                                selectionChange=".onMaterialChange"
+                                width="100%">
+                                <core:Item
+                                    xmlns:core="sap.ui.core"
+                                    key="{app>id}"
+                                    text="{app>id} - {app>name}" />
+                            </ComboBox>
+
+                            <Label
+                                text="{i18n>labelsBatch}"
+                                required="true" />
+                            <ComboBox
+                                selectedKey="{app>selectedLabelRequest/batchId}"
+                                items="{
+                                    path: 'app>availableBatches',
+                                    templateShareable: false
+                                }"
+                                enabled="{= !!${app>selectedLabelRequest/materialId} }"
+                                selectionChange=".onBatchChange"
+                                width="100%">
+                                <core:Item
+                                    xmlns:core="sap.ui.core"
+                                    key="{app>id}"
+                                    text="{app>id}" />
+                            </ComboBox>
+
+                            <Label
+                                text="{i18n>labelsMarket}"
+                                required="true" />
+                            <Select
+                                selectedKey="{app>selectedLabelRequest/market}"
+                                items="{
+                                    path: 'app>markets',
+                                    templateShareable: false
+                                }"
+                                change=".onRequestChange"
+                                width="100%">
+                                <core:Item
+                                    xmlns:core="sap.ui.core"
+                                    key="{app>id}"
+                                    text="{app>name}" />
+                            </Select>
+
+                            <Label
+                                text="{i18n>labelsQuantity}"
+                                required="true" />
+                            <StepInput
+                                value="{app>selectedLabelRequest/quantity}"
+                                min="1"
+                                step="1"
+                                change=".onRequestChange"
+                                width="100%" />
+                        </form:SimpleForm>
+                    </Panel>
+
+                    <Panel
+                        headerText="{i18n>labelsProductSection}"
+                        class="sapUiNoContentPadding">
+                        <VBox class="sapUiSmallMargin">
+                            <MessageStrip
+                                text="{i18n>labelsProductEmpty}"
+                                type="Information"
+                                showIcon="true"
+                                showCloseButton="false"
+                                visible="{= !${app>selectedProduct/name} }" />
+
+                            <VBox
+                                visible="{= !!${app>selectedProduct/name} }">
+                                <ObjectIdentifier
+                                    title="{app>selectedProduct/name}"
+                                    text="{app>selectedProduct/description}"
+                                    titleActive="false" />
+
+                                <l:Grid
+                                    defaultSpan="XL6 L6 M6 S12"
+                                    hSpacing="1"
+                                    vSpacing="0"
+                                    class="sapUiSmallMarginTop">
+                                    <VBox>
+                                        <Label text="{i18n>labelsCertificate}" />
+                                        <Text
+                                            text="{app>selectedProduct/certificate}"
+                                            wrapping="true" />
+                                    </VBox>
+
+                                    <VBox>
+                                        <Label text="{i18n>labelsContent}" />
+                                        <Text
+                                            text="{app>selectedProduct/content}"
+                                            wrapping="true" />
+                                    </VBox>
+
+                                    <VBox>
+                                        <Label text="{i18n>labelsTechnicalDirector}" />
+                                        <Text
+                                            text="{app>selectedProduct/technicalDirector}"
+                                            wrapping="true" />
+                                    </VBox>
+
+                                    <VBox>
+                                        <Label text="{i18n>labelsStorage}" />
+                                        <Text
+                                            text="{app>selectedProduct/storage}"
+                                            wrapping="true" />
+                                    </VBox>
+                                </l:Grid>
+
+                                <Label
+                                    text="{i18n>labelsRegulatoryText}"
+                                    class="sapUiSmallMarginTop" />
+                                <Text
+                                    text="{app>selectedProduct/regulatoryText}"
+                                    wrapping="true" />
+                            </VBox>
+                        </VBox>
+                    </Panel>
+                </VBox>
+
+                <VBox>
+                    <layoutData>
+                        <l:GridData span="XL4 L4 M12 S12" />
+                    </layoutData>
+
+                    <Panel
+                        headerText="{i18n>labelsFormatSection}"
+                        class="sapUiNoContentPadding sapUiSmallMarginBottom">
+                        <VBox class="sapUiSmallMargin">
+                            <Label
+                                text="{i18n>labelsFormat}"
+                                required="true"
+                                labelFor="labelFormatSelect" />
+                            <Select
+                                id="labelFormatSelect"
+                                selectedKey="{app>selectedLabelRequest/formatId}"
+                                items="{
+                                    path: 'app>labelFormats',
+                                    templateShareable: false
+                                }"
+                                change=".onRequestChange"
+                                width="100%"
+                                class="sapUiTinyMarginTop">
+                                <core:Item
+                                    xmlns:core="sap.ui.core"
+                                    key="{app>id}"
+                                    text="{app>name}" />
+                            </Select>
+                        </VBox>
+                    </Panel>
+
+                    <Panel
+                        headerText="{i18n>labelsDerivedSection}"
+                        class="sapUiNoContentPadding sapUiSmallMarginBottom">
+                        <VBox class="sapUiSmallMargin">
+                            <ObjectAttribute
+                                title="{i18n>labelsExpirationDate}"
+                                text="{app>selectedLabelRequest/expirationDate}" />
+                            <ObjectAttribute
+                                title="{i18n>labelsGtin}"
+                                text="{app>selectedLabelRequest/gtin}"
+                                class="sapUiSmallMarginTop" />
+                        </VBox>
+                    </Panel>
+
+                    <Panel
+                        headerText="{i18n>labelsPreviewSection}"
+                        class="sapUiNoContentPadding">
+                        <VBox class="sapUiSmallMargin">
+                            <VBox
+                                alignItems="Center"
+                                visible="{= !${app>preview/generated} }"
+                                class="sapUiMediumMargin">
+                                <core:Icon
+                                    src="sap-icon://show"
+                                    size="2rem" />
+                                <Title
+                                    text="{app>labelTexts/previewTitle}"
+                                    level="H4"
+                                    class="sapUiSmallMarginTop" />
+                                <Text
+                                    text="{app>labelTexts/previewEmpty}"
+                                    textAlign="Center"
+                                    wrapping="true"
+                                    class="sapUiTinyMarginTop" />
+                            </VBox>
+
+                            <VBox visible="{app>preview/generated}">
+                                <ObjectHeader
+                                    title="{app>preview/materialName}"
+                                    intro="{app>labelTexts/previewTitle}"
+                                    icon="sap-icon://bar-code">
+                                    <statuses>
+                                        <ObjectStatus
+                                            text="{app>preview/format}"
+                                            state="Success" />
+                                    </statuses>
+
+                                    <attributes>
+                                        <ObjectAttribute
+                                            title="{i18n>labelsBatch}"
+                                            text="{app>preview/lot}" />
+                                        <ObjectAttribute
+                                            title="{i18n>labelsExpirationDate}"
+                                            text="{app>preview/expirationDate}" />
+                                        <ObjectAttribute
+                                            title="{i18n>labelsGtin}"
+                                            text="{app>preview/gtin}" />
+                                        <ObjectAttribute
+                                            title="{i18n>labelsMarket}"
+                                            text="{app>preview/market}" />
+                                        <ObjectAttribute
+                                            title="{i18n>labelsQuantity}"
+                                            text="{app>preview/quantity}" />
+                                    </attributes>
+                                </ObjectHeader>
+                            </VBox>
+                        </VBox>
+                    </Panel>
+                </VBox>
+            </l:Grid>
+        </f:content>
+
+        <f:footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button
+                    text="{i18n>labelsGeneratePreview}"
+                    type="Emphasized"
+                    icon="sap-icon://show"
+                    press=".onGeneratePreview" />
+                <Button
+                    text="{i18n>labelsPrint}"
+                    icon="sap-icon://print"
+                    enabled="{app>preview/generated}"
+                    press=".onPrint" />
+                <Button
+                    text="{i18n>labelsClear}"
+                    icon="sap-icon://clear-all"
+                    press=".onClear" />
+                <Button
+                    text="{i18n>backButtonTooltip}"
+                    icon="sap-icon://nav-back"
+                    press=".onNavBack" />
+            </OverflowToolbar>
+        </f:footer>
+    </f:DynamicPage>
+</mvc:View>
